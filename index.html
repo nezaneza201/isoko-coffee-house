@@ -21,4 +21,31 @@ const groups=[
 const renderItems=a=>a.map(x=>'<div class="item"><span>'+x[0]+'</span><span class="price">'+x[1]+' RWF</span></div>').join('');
 const grid=document.getElementById('menuGrid');
 grid.innerHTML=groups.map(g=>'<article class="panel"><h3>'+g[0]+'</h3>'+renderItems(g[1])+(g[2]&&g[2].length?'<h4>'+g[2][0]+'</h4>'+renderItems(g[2][1]):'')+(g[2]&&g[2][2]?'<h4>'+g[2][2][0]+'</h4>'+renderItems(g[2][2][1]):'')+(g[0]==='Quick Breakfast'?'<div class="note">This second breakfast card has different prices from the other supplied breakfast card. Owner confirmation is needed before final publication.</div>':'')+'</article>').join('');
+</script><script>
+const ISOKO_API='https://isoko-api-production.up.railway.app';
+(async()=>{
+ try{
+  const [menu,settings,gallery]=await Promise.all([
+   fetch(ISOKO_API+'/api/menu').then(r=>r.json()),
+   fetch(ISOKO_API+'/api/settings').then(r=>r.json()),
+   fetch(ISOKO_API+'/api/gallery').then(r=>r.json())
+  ]);
+  if(Array.isArray(menu)&&menu.length){
+   const by={}; menu.forEach(x=>(by[x.category]??=[]).push([x.name,Number(x.price_rwf).toLocaleString('en-RW')]));
+   document.getElementById('menuGrid').innerHTML=Object.entries(by).map(([cat,items])=>'<article class="panel"><h3>'+cat+'</h3>'+items.map(x=>'<div class="item"><span>'+x[0]+'</span><span class="price">'+x[1]+' RWF</span></div>').join('')+'</article>').join('');
+  }
+  if(settings){
+   document.querySelectorAll('.info .row')[0]?.querySelector('b')?.replaceChildren(document.createTextNode(settings.address||'Camp Muhoza, NM 63 St'));
+   document.querySelectorAll('.info .row')[1]?.querySelector('b')?.replaceChildren(document.createTextNode(settings.hours||'05:30–00:00 daily'));
+   const phone=settings.phone||'+250 780 711 135';
+   const phoneEl=document.querySelector('.info .row:nth-of-type(3) b'); if(phoneEl) phoneEl.textContent=phone;
+  }
+  if(Array.isArray(gallery)&&gallery.length){
+   const box=document.querySelector('.gallerybox');
+   box.innerHTML='<div class="gallery-live">'+gallery.map(x=>'<figure style="margin:0"><img src="'+ISOKO_API+'/api/gallery/'+x.id+'/image" alt="'+(x.caption||'Isoko Coffee House')+'" style="width:100%;height:260px;object-fit:cover;border-radius:18px"><figcaption style="padding:10px;color:var(--muted)">'+(x.caption||'Isoko Coffee House')+'</figcaption></figure>').join('')+'</div>';
+   box.style.padding='20px';
+   box.querySelector('.gallery-live').style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px';
+  }
+ }catch(e){console.warn('Isoko API unavailable; using built-in website data.',e)}
+})();
 </script></body></html>
