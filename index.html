@@ -8,7 +8,7 @@
 <section id="services"><div class="wrap"><div class="head"><div><div class="kicker">What Isoko offers</div><h2>More than coffee.</h2></div><p>These services come directly from the Isoko promotional card you supplied.</p></div><div class="services"><div class="service"><span>🍳</span>Breakfast</div><div class="service"><span>🍛</span>Lunch</div><div class="service"><span>🍽️</span>Dinner</div><div class="service"><span>🎉</span>Catering</div><div class="service"><span>🥂</span>Luncheons</div><div class="service"><span>🎈</span>Events</div></div></div></section>
 <section class="gallery" id="gallery"><div class="wrap"><div class="head"><div><div class="kicker">Real Isoko gallery</div><h2>The place, not stock photos.</h2></div><p>Discover the atmosphere, coffee and moments that make Isoko Coffee House a place to come back to.</p></div><div class="gallerybox"><div class="icon">📸</div><h3>Ready for Isoko's real photos</h3><p>A curated collection of Isoko Coffee House moments is coming soon. Visit us in Musanze and experience it for yourself.</p></div></div></section>
 <section id="visit"><div class="wrap"><div class="head"><div><div class="kicker">Come through</div><h2>Find Isoko.</h2></div><p>Camp Muhoza, Musanze. Call or use directions.</p></div><div class="visit"><div class="info"><h3>Visit information</h3><div class="row"><span class="label">Address</span><b>Camp Muhoza, NM 63 St</b></div><div class="row"><span class="label">Hours</span><b>05:30–00:00 daily</b></div><div class="row"><span class="label">Phone</span><a href="tel:+250780711135"><b>+250 780 711 135</b></a></div><div class="row"><span class="label">Parking</span><b>Available</b></div><div class="buttons"><a class="btn gold" href="tel:+250780711135">Call Isoko</a><a class="btn" style="border:1px solid var(--line)" href="https://wa.me/250780711135?text=Hello%20Isoko%20Coffee%20House" target="_blank">WhatsApp</a></div></div><div class="map"><div><div style="font-size:52px">📍</div><h3>Camp Muhoza · Musanze</h3><p>Open directions in Google Maps.</p><a class="btn" href="https://www.google.com/maps/search/?api=1&query=Isoko+Coffee+House+Musanze" target="_blank">Open Maps</a></div></div></div></div></section>
-<footer><div class="wrap footer"><div><div class="brand">ISOKO</div><p>Good coffee. Good moments. Isoko Coffee House · Musanze</p></div><small>© 2026 Isoko Coffee House · <a href="admin.html" style="color:inherit;text-decoration:none;opacity:.65">Owner Login</a></small></div></footer>
+<footer><div class="wrap footer"><div><div class="brand">ISOKO</div><p>Good coffee. Good moments. Isoko Coffee House · Musanze</p></div><small>© 2026 Isoko Coffee House ·</small></div></footer>
 <script>
 const groups=[
 ['Breakfast',[['Sausage Omelette','5,000'],['Spanish Omelette','3,000'],['Special Omelette','5,000'],['Rolex (Plain)','3,500'],['Rolex (Chips)','6,000'],['Beef Boilo','5,000'],['Chicken Boilo','5,000']],['Salads',[['Fruit Salad','5,000'],['Volcano Garden Salad','5,000'],['Isoko Fruits Plata','6,000'],['Gucambale','4,000']]]],
@@ -21,31 +21,4 @@ const groups=[
 const renderItems=a=>a.map(x=>'<div class="item"><span>'+x[0]+'</span><span class="price">'+x[1]+' RWF</span></div>').join('');
 const grid=document.getElementById('menuGrid');
 grid.innerHTML=groups.map(g=>'<article class="panel"><h3>'+g[0]+'</h3>'+renderItems(g[1])+(g[2]&&g[2].length?'<h4>'+g[2][0]+'</h4>'+renderItems(g[2][1]):'')+(g[2]&&g[2][2]?'<h4>'+g[2][2][0]+'</h4>'+renderItems(g[2][2][1]):'')+(g[0]==='Quick Breakfast'?'<div class="note">This second breakfast card has different prices from the other supplied breakfast card. Owner confirmation is needed before final publication.</div>':'')+'</article>').join('');
-</script><script>
-const ISOKO_API='https://isoko-api-production.up.railway.app';
-(async()=>{
- try{
-  const [menu,settings,gallery]=await Promise.all([
-   fetch(ISOKO_API+'/api/menu').then(r=>r.json()),
-   fetch(ISOKO_API+'/api/settings').then(r=>r.json()),
-   fetch(ISOKO_API+'/api/gallery').then(r=>r.json())
-  ]);
-  if(Array.isArray(menu)&&menu.length){
-   const by={}; menu.forEach(x=>(by[x.category]??=[]).push([x.name,Number(x.price_rwf).toLocaleString('en-RW')]));
-   document.getElementById('menuGrid').innerHTML=Object.entries(by).map(([cat,items])=>'<article class="panel"><h3>'+cat+'</h3>'+items.map(x=>'<div class="item"><span>'+x[0]+'</span><span class="price">'+x[1]+' RWF</span></div>').join('')+'</article>').join('');
-  }
-  if(settings){
-   document.querySelectorAll('.info .row')[0]?.querySelector('b')?.replaceChildren(document.createTextNode(settings.address||'Camp Muhoza, NM 63 St'));
-   document.querySelectorAll('.info .row')[1]?.querySelector('b')?.replaceChildren(document.createTextNode(settings.hours||'05:30–00:00 daily'));
-   const phone=settings.phone||'+250 780 711 135';
-   const phoneEl=document.querySelector('.info .row:nth-of-type(3) b'); if(phoneEl) phoneEl.textContent=phone;
-  }
-  if(Array.isArray(gallery)&&gallery.length){
-   const box=document.querySelector('.gallerybox');
-   box.innerHTML='<div class="gallery-live">'+gallery.map(x=>'<figure style="margin:0"><img src="'+ISOKO_API+'/api/gallery/'+x.id+'/image" alt="'+(x.caption||'Isoko Coffee House')+'" style="width:100%;height:260px;object-fit:cover;border-radius:18px"><figcaption style="padding:10px;color:var(--muted)">'+(x.caption||'Isoko Coffee House')+'</figcaption></figure>').join('')+'</div>';
-   box.style.padding='20px';
-   box.querySelector('.gallery-live').style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px';
-  }
- }catch(e){console.warn('Isoko API unavailable; using built-in website data.',e)}
-})();
 </script></body></html>
