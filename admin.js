@@ -1,4 +1,4 @@
-const API=(window.ISOKO_API_URL||localStorage.getItem('isoko_api_url')||'').replace(/\/$/,'');
+const API=(window.ISOKO_API_URL||localStorage.getItem('isoko_api_url')||'https://isoko-api-production.up.railway.app').replace(/\/$/,'');
 const app=document.getElementById('app');
 let token=localStorage.getItem('isoko_admin_token');
 const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
