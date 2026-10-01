@@ -36,24 +36,25 @@ main{min-height:calc(100vh - 74px);display:grid;place-items:center;padding:35px 
 <div class="note">For the most accurate current prices or availability, please confirm with Isoko directly.</div>
 </section></div></main>
 <script>
-const menu=['Breakfast','Salads','Lunch & Dinner','Meat','Hot Dishes','Fast Food','Coffee','Tea','Juices','Milkshakes','Iced drinks'];
-function reply(q){
- const s=q.toLowerCase();
- if(s.includes('hour')||s.includes('open')||s.includes('close')) return 'We are publicly listed as open daily from 05:30 to 00:00. 🕐';
- if(s.includes('where')||s.includes('location')||s.includes('address')||s.includes('direction')) return 'You can find Isoko Coffee House in Camp Muhoza, NM 63 St, Musanze. 📍\n\nYou can use the Directions button on our website to open Google Maps.';
- if(s.includes('phone')||s.includes('contact')||s.includes('call')||s.includes('whatsapp')) return 'You can reach Isoko Coffee House on +250 780 711 135. You can also use WhatsApp from the main website. 📞';
- if(s.includes('cater')||s.includes('event')||s.includes('luncheon')||s.includes('party')) return 'Yes. Isoko offers catering, luncheons and events. 🎉 For a specific event, please contact the team directly so they can discuss your requirements.';
- if(s.includes('coffee')) return 'We serve Espresso, Macchiato, Americano, Black Coffee, French Press, Cappuccino, Café Latte, Cortado, African Coffee and Hot Chocolate. ☕';
- if(s.includes('breakfast')) return 'Breakfast options include omelettes, Rolex, Beef Boilo and Chicken Boilo. There are two supplied breakfast cards with different prices, so please confirm the current price with Isoko.';
- if(s.includes('price')||s.includes('menu')||s.includes('food')||s.includes('eat')||s.includes('drink')) return 'Our menu includes breakfast, salads, lunch & dinner, meat dishes, hot dishes, fast food, coffee, tea, juices, milkshakes and iced drinks. 🍽️\n\nAsk me about a category, like “coffee”, “breakfast”, or “fast food”.';
- if(s.includes('burger')) return 'Fast-food options include Beef Burger (5,000 RWF), Chicken Burger (6,000 RWF), Ham & Cheese Burger (4,000 RWF), Chicken Avo Sandwich (5,000 RWF), Club Sandwich (4,000 RWF), Veggie Wrap (4,000 RWF), and Beef or Chicken Wrap (4,500 RWF).';
- if(s.includes('fast food')||s.includes('sandwich')||s.includes('wrap')) return 'Fast food includes burgers, sandwiches and wraps. Ask “burger” for the listed burger prices.';
- if(s.includes('thank')) return 'You’re welcome! ☕❤️ Hope to see you at Isoko.';
- return 'I can help with Isoko’s menu, opening hours, location, contact details, catering and events. Try asking “What is on the menu?”, “Where are you located?”, or “Do you offer catering?”';
-}
+const history=[];
 function add(text,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=text;document.getElementById('messages').appendChild(d);d.parentElement.scrollTop=d.parentElement.scrollHeight}
-function ask(q){add(q,'user');setTimeout(()=>add(reply(q),'bot'),250)}
+async function ask(q){
+  add(q,'user');
+  history.push({role:'user',content:q});
+  const thinking=document.createElement('div');thinking.className='msg bot';thinking.textContent='Thinking… ☕';thinking.id='thinking';document.getElementById('messages').appendChild(thinking);
+  try{
+    const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history.slice(-12)})});
+    const data=await res.json();
+    if(!res.ok) throw new Error(data.error||'Chat service unavailable');
+    document.getElementById('thinking')?.remove();
+    add(data.reply||'Sorry, I could not answer that right now.','bot');
+    history.push({role:'assistant',content:data.reply||''});
+  }catch(err){
+    document.getElementById('thinking')?.remove();
+    add('Sorry — the AI assistant is temporarily unavailable. Please contact Isoko on +250 780 711 135. 📞','bot');
+  }
+}
 function send(e){e.preventDefault();const i=document.getElementById('input');const q=i.value.trim();if(!q)return;i.value='';ask(q)}
-add('Hello 👋 Welcome to Isoko Coffee House. I can help you with our menu, hours, location, contact details, catering and events. What would you like to know?','bot');
+add('Hello 👋 Welcome to Isoko Coffee House. I’m your AI assistant. Ask me about our menu, prices, opening hours, location, coffee, catering, events or anything else about Isoko.','bot');
 </script>
 </body></html>
