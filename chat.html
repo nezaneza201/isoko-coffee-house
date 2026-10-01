@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chat with Isoko — Isoko Coffee House</title>
+<meta name="description" content="Chat with Isoko Coffee House about the menu, opening hours, location, catering and events.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#17120f;--cream:#f7f1e8;--paper:#fffaf3;--brown:#6b3e25;--gold:#d7a763;--muted:#74685f;--line:#dfd2c4}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif}
+a{text-decoration:none;color:inherit}.wrap{max-width:1050px;margin:auto;padding:0 20px}
+nav{height:74px;background:#17120f;color:white;display:flex;align-items:center}.nav{display:flex;justify-content:space-between;align-items:center;width:100%}
+.brand{font:700 25px 'Playfair Display'}.brand small{display:block;font:700 9px 'DM Sans';letter-spacing:.25em;color:var(--gold)}
+.back{padding:10px 16px;border:1px solid #ffffff30;border-radius:999px;font-size:13px}
+main{min-height:calc(100vh - 74px);display:grid;place-items:center;padding:35px 0}
+.chat{width:min(760px,100%);height:min(760px,calc(100vh - 130px));background:var(--paper);border:1px solid var(--line);border-radius:28px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px #3a241812}
+.header{background:#211711;color:white;padding:24px}.header h1{font:700 32px 'Playfair Display';margin:0 0 5px}.header p{margin:0;color:#cdbfb5;font-size:13px}.status{display:inline-flex;align-items:center;gap:7px;font-size:11px;color:#d7a763;margin-top:10px}.dot{width:8px;height:8px;border-radius:50%;background:#6fd08a}
+.messages{flex:1;overflow:auto;padding:25px;background:linear-gradient(#fffaf3,#f7f0e6)}
+.msg{max-width:78%;padding:13px 16px;border-radius:18px;margin:0 0 12px;line-height:1.55;font-size:14px;white-space:pre-wrap}.bot{background:white;border:1px solid var(--line);border-top-left-radius:5px}.user{background:#6b3e25;color:white;margin-left:auto;border-top-right-radius:5px}
+.quick{display:flex;gap:8px;overflow:auto;padding:12px 15px;border-top:1px solid var(--line);background:#fffaf3}.quick button{white-space:nowrap;border:1px solid var(--line);background:white;border-radius:999px;padding:9px 12px;font:600 12px 'DM Sans';cursor:pointer}
+.input{display:flex;gap:10px;padding:15px;border-top:1px solid var(--line);background:white}.input input{flex:1;border:1px solid var(--line);border-radius:999px;padding:13px 16px;font:14px 'DM Sans';outline:none}.input button{border:0;background:var(--gold);color:#21150e;border-radius:999px;padding:0 20px;font-weight:800;cursor:pointer}
+.note{text-align:center;font-size:10px;color:#9b8d83;padding:7px 15px 12px;background:white}
+@media(max-width:600px){.chat{height:calc(100vh - 100px);border-radius:20px}.header{padding:20px}.messages{padding:18px}.msg{max-width:88%}.links{display:none}}
+</style>
+</head>
+<body>
+<nav><div class="wrap nav"><a class="brand" href="index.html">ISOKO<small>COFFEE HOUSE</small></a><a class="back" href="index.html">← Back to website</a></div></nav>
+<main><div class="wrap" style="width:100%"><section class="chat">
+<div class="header"><h1>Chat with Isoko ☕</h1><p>Your digital front desk for menu, hours, location, catering and events.</p><div class="status"><span class="dot"></span> Isoko assistant</div></div>
+<div class="messages" id="messages"></div>
+<div class="quick">
+<button onclick="ask('What is on the menu?')">🍽️ Menu</button><button onclick="ask('What are your opening hours?')">🕐 Hours</button><button onclick="ask('Where are you located?')">📍 Location</button><button onclick="ask('Do you offer catering?')">🎉 Catering</button><button onclick="ask('How can I contact you?')">📞 Contact</button>
+</div>
+<form class="input" onsubmit="send(event)"><input id="input" autocomplete="off" placeholder="Ask Isoko anything..."><button>Send</button></form>
+<div class="note">For the most accurate current prices or availability, please confirm with Isoko directly.</div>
+</section></div></main>
+<script>
+const menu=['Breakfast','Salads','Lunch & Dinner','Meat','Hot Dishes','Fast Food','Coffee','Tea','Juices','Milkshakes','Iced drinks'];
+function reply(q){
+ const s=q.toLowerCase();
+ if(s.includes('hour')||s.includes('open')||s.includes('close')) return 'We are publicly listed as open daily from 05:30 to 00:00. 🕐';
+ if(s.includes('where')||s.includes('location')||s.includes('address')||s.includes('direction')) return 'You can find Isoko Coffee House in Camp Muhoza, NM 63 St, Musanze. 📍\n\nYou can use the Directions button on our website to open Google Maps.';
+ if(s.includes('phone')||s.includes('contact')||s.includes('call')||s.includes('whatsapp')) return 'You can reach Isoko Coffee House on +250 780 711 135. You can also use WhatsApp from the main website. 📞';
+ if(s.includes('cater')||s.includes('event')||s.includes('luncheon')||s.includes('party')) return 'Yes. Isoko offers catering, luncheons and events. 🎉 For a specific event, please contact the team directly so they can discuss your requirements.';
+ if(s.includes('coffee')) return 'We serve Espresso, Macchiato, Americano, Black Coffee, French Press, Cappuccino, Café Latte, Cortado, African Coffee and Hot Chocolate. ☕';
+ if(s.includes('breakfast')) return 'Breakfast options include omelettes, Rolex, Beef Boilo and Chicken Boilo. There are two supplied breakfast cards with different prices, so please confirm the current price with Isoko.';
+ if(s.includes('price')||s.includes('menu')||s.includes('food')||s.includes('eat')||s.includes('drink')) return 'Our menu includes breakfast, salads, lunch & dinner, meat dishes, hot dishes, fast food, coffee, tea, juices, milkshakes and iced drinks. 🍽️\n\nAsk me about a category, like “coffee”, “breakfast”, or “fast food”.';
+ if(s.includes('burger')) return 'Fast-food options include Beef Burger (5,000 RWF), Chicken Burger (6,000 RWF), Ham & Cheese Burger (4,000 RWF), Chicken Avo Sandwich (5,000 RWF), Club Sandwich (4,000 RWF), Veggie Wrap (4,000 RWF), and Beef or Chicken Wrap (4,500 RWF).';
+ if(s.includes('fast food')||s.includes('sandwich')||s.includes('wrap')) return 'Fast food includes burgers, sandwiches and wraps. Ask “burger” for the listed burger prices.';
+ if(s.includes('thank')) return 'You’re welcome! ☕❤️ Hope to see you at Isoko.';
+ return 'I can help with Isoko’s menu, opening hours, location, contact details, catering and events. Try asking “What is on the menu?”, “Where are you located?”, or “Do you offer catering?”';
+}
+function add(text,who){const d=document.createElement('div');d.className='msg '+who;d.textContent=text;document.getElementById('messages').appendChild(d);d.parentElement.scrollTop=d.parentElement.scrollHeight}
+function ask(q){add(q,'user');setTimeout(()=>add(reply(q),'bot'),250)}
+function send(e){e.preventDefault();const i=document.getElementById('input');const q=i.value.trim();if(!q)return;i.value='';ask(q)}
+add('Hello 👋 Welcome to Isoko Coffee House. I can help you with our menu, hours, location, contact details, catering and events. What would you like to know?','bot');
+</script>
+</body></html>
